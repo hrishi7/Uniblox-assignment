@@ -7,7 +7,7 @@ import { carts, products } from '../data';
  *
  * This function handles the addition of a specified product to the cart
  * of a user identified by userId. If the product does not exist, it
- * returns a 404 error. If the user's cart does not exist, it creates a
+ * returns a 400 error. If the user's cart does not exist, it creates a
  * new cart. If the product is already in the cart, it updates the quantity.
  * The cart's total is recalculated after the addition.
  *
@@ -20,7 +20,7 @@ export const addToCart = async (req: Request, res: Response) => {
     
     const product = products.find(p => p.id === productId);
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(400).json({ message: 'Product not found' });
     }
 
     let cart = carts.find(c => c.userId === userId);
@@ -33,7 +33,8 @@ export const addToCart = async (req: Request, res: Response) => {
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      cart.items.push({ productId, quantity });
+      const product = products.find(p => p.id === productId);
+      cart.items.push({ productId, quantity, price: product?.price || 0 });
     }
 
     // Recalculate total
@@ -60,7 +61,7 @@ export const getCart = async (req: Request, res: Response) => {
     const cart = carts.find(c => c.userId === userId);
     
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      return res.status(400).json({ message: 'Cart not found' });
     }
 
     res.json(cart);
@@ -86,12 +87,12 @@ export const updateCartItem = async (req: Request, res: Response) => {
 
     const cart = carts.find(c => c.userId === userId);
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      return res.status(400).json({ message: 'Cart not found' });
     }
 
     const item = cart.items.find(item => item.productId === itemId);
     if (!item) {
-      return res.status(404).json({ message: 'Item not found in cart' });
+      return res.status(400).json({ message: 'Item not found in cart' });
     }
 
     item.quantity = quantity;
@@ -121,7 +122,7 @@ export const removeFromCart = async (req: Request, res: Response) => {
 
     const cart = carts.find(c => c.userId === userId);
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      return res.status(400).json({ message: 'Cart not found' });
     }
 
     cart.items = cart.items.filter(item => item.productId !== itemId);
