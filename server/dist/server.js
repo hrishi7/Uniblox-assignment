@@ -12,6 +12,7 @@ const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cart_routes_1 = __importDefault(require("./src/routes/cart.routes"));
 const order_routes_1 = __importDefault(require("./src/routes/order.routes"));
+const product_routes_1 = __importDefault(require("./src/routes/product.routes"));
 const admin_routes_1 = __importDefault(require("./src/routes/admin.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -30,6 +31,7 @@ app.use(limiter);
 // Routes
 app.use('/api/cart', cart_routes_1.default);
 app.use('/api/orders', order_routes_1.default);
+app.use('/api/products', product_routes_1.default);
 app.use('/api/admin', admin_routes_1.default);
 // Test route
 app.get('/api/health', (req, res) => {

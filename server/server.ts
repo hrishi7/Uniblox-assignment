@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 
 import cartRoutes from './src/routes/cart.routes';
 import orderRoutes from './src/routes/order.routes';
+import productRoutes from './src/routes/product.routes';
 import adminRoutes from './src/routes/admin.routes';
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use(limiter);
 // Routes
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/products', productRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Test route

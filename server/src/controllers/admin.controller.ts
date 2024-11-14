@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DiscountCode } from '../types/types';
 
-import { discountCodes, orders } from '../data';
+import { discountCodes, orders, orderCountAfterDiscountApplied } from '../data';
 
 
 export const generateDiscountCode = async (req: Request, res: Response) => {
@@ -35,7 +35,8 @@ export const getStats = async (req: Request, res: Response) => {
       discountCodes: discountCodes,
       averageOrderValue: totalAmount / totalOrders || 0,
       totalDiscountCodesIssued: discountCodes.length,
-      activeDiscountCodes: discountCodes.filter(code => code.isValid).length
+      activeDiscountCodes: discountCodes.filter(code => code.isValid).length,
+      orderCountAfterDiscountApplied: orderCountAfterDiscountApplied
     };
     
     res.json(stats);

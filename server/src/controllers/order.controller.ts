@@ -6,26 +6,35 @@ import { carts, orders, discountCodes, orderCountAfterDiscountApplied } from '..
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const { userId, discountCode } = req.body;
+
     const orderCount = orders.length + 1;
-    const isNthOrder = orderCount % orderCountAfterDiscountApplied === 0;
-    
-    // Find user's cart
-    const cart = carts.find(c => c.userId === userId);
-    if (!cart || cart.items.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty' });
-    }
+
+     // Find user's cart
+     const cart = carts.find(c => c.userId === userId);
+     if (!cart || cart.items.length === 0) {
+       return res.status(400).json({ message: 'Cart is empty' });
+     }
 
     let discountAmount = 0;
-    if (discountCode && isNthOrder) {
+
+    if(discountCode){
+      // check for valid code
       const validDiscount = discountCodes.find(
         d => d.code === discountCode && d.isValid
       );
       if (!validDiscount) {
         return res.status(400).json({ message: 'Invalid discount code' });
       }
+      const isNthOrder = orderCount % orderCountAfterDiscountApplied === 0;
+      if(!isNthOrder){
+        return res.status(400).json({message: 'this order does not eligible for discount'})
+      }
+
+      // calculate the discount 
       discountAmount = (cart.total * validDiscount.percentage) / 100;
     }
-
+    
+   
     const order: Partial<Order> = {
       id: `ORDER-${Date.now()}`,
       userId,
@@ -53,17 +62,7 @@ export const createOrder = async (req: Request, res: Response) => {
     cart.items = [];
     cart.total = 0;
 
-    // Generate new discount code and push it to store to use in between next n orders if it's nth order
-    if (isNthOrder) { // Every 5th order gets a discount
-      const newDiscountCode: DiscountCode = {
-        code: `DISCOUNT-${Date.now()}`,
-        percentage: 10,
-        isValid: true
-      };
-      discountCodes.push(newDiscountCode);
-    }
-
-    res.status(201).json(order);
+    res.status(201).json({order});
   } catch (error) {
     res.status(500).json({ message: 'Error creating order' });
   }
