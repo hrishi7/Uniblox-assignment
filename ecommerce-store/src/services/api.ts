@@ -7,9 +7,8 @@ const api = axios.create({
 });
 
 export const productApi = {
-  getAll: () => api.get('/products'),
+  getAll: async() => await api.get('/products'),
 
-  getById: (id: string) => api.get(`/products/${id}`),
 };
 
 export const cartApi = {
@@ -39,5 +38,5 @@ export const orderApi = {
 export const adminApi = {
   getStats: async() => await api.get('/admin/stats'),
 
-  generateDiscountCode: async(discountPercentage: number) => await api.post('/admin/discounts',{discountPercentage}),
+  generateDiscountCode: async(discountPercentage: number) => await api.post('/admin/discount',{discountPercentage}),
 };

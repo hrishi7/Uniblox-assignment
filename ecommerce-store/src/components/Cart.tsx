@@ -17,7 +17,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { orderApi, cartApi } from "../services/api";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { CartItem } from "../types";
 
 const Cart = () => {
@@ -29,7 +30,7 @@ const Cart = () => {
 
   useEffect(() => {
     fetchCartDetails(); // Call the async function
-  }, [user!.id]); // Add user.id as a dependency
+  }); // Add user.id as a dependency
 
   /**
    * Fetches the user's cart details from the API and updates the state with the cart items.
@@ -60,9 +61,11 @@ const Cart = () => {
     try {
       await orderApi.checkout(discountCode, user!.id); // Call cartApi.checkout
       toast.success("Order placed successfully!"); // Show success message
-      navigate("/orders"); // Navigate to orders page
-    } catch (error) {
-      toast.error("Failed to place order. Please try again."); // Handle error
+      setTimeout(() => {
+        navigate("/orders"); // Navigate to orders page
+      }, 1000);
+    } catch (error: any) {
+      toast.error("Failed to place order due to " + error.response.data.message); // Handle error
     }
   };
 
@@ -135,8 +138,8 @@ const Cart = () => {
             {cartItems.map((item) => (
               <ListItem key={item.productId}>
                 <ListItemText
-                  primary={item.productId}
-                  secondary={`Quantity: ${item.quantity} - $${
+                  primary={`Product ID: ${item.productId}`}
+                  secondary={`Quantity: ${item.quantity} - Rs.${
                     item.price * item.quantity
                   }`}
                 />
@@ -203,6 +206,7 @@ const Cart = () => {
           </Button>
         </>
       )}
+       <ToastContainer />
     </Container>
   );
 };

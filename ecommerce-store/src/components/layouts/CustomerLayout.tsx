@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,10 +7,6 @@ import {
   Badge,
   IconButton,
   Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
   Container,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -19,14 +14,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const CustomerLayout = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const cartItemCount = 0
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <AppBar position="static">
+      <AppBar position="static" elevation={0} sx={{ backgroundColor: "#C9E6F0", color: '#003161' }}>
         <Toolbar>
           <Typography
             variant="h6"
@@ -34,12 +29,15 @@ const CustomerLayout = () => {
             sx={{ flexGrow: 1, cursor: "pointer" }}
             onClick={() => navigate("/")}
           >
-            E-Commerce Store
+            Uniblox
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Button color="inherit" onClick={() => navigate("/products")}>
               Products
+            </Button>
+            <Button color="inherit" onClick={() => navigate("/orders")}>
+              Orders
             </Button>
 
             <IconButton
@@ -73,8 +71,8 @@ const CustomerLayout = () => {
 
       <Box component="footer" sx={{ py: 3, bgcolor: "background.paper" }}>
         <Container maxWidth="lg">
-          <Typography variant="body2" color="text.secondary" align="center">
-            © 2024 E-Commerce Store. All rights reserved.
+          <Typography variant="body2" sx={{color: '#003161'}} align="center">
+            © 2024 Uniblox. All rights reserved.
           </Typography>
         </Container>
       </Box>

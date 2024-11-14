@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -7,14 +7,9 @@ import {
   Box,
   Drawer,
   List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Container,
   Divider,
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../context/AuthContext';
 
@@ -22,20 +17,13 @@ const DRAWER_WIDTH = 240;
 
 const AdminLayout = () => {
   const { logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
-    { text: 'Discounts', icon: <LocalOfferIcon />, path: '/admin/discounts' },
-  ];
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" elevation={0}  sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: "#C9E6F0", color: '#003161' }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Admin Panel
+            Uniblox Admin Panel
           </Typography>
           <Button color="inherit" onClick={logout} startIcon={<LogoutIcon />}>
             Logout

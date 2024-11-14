@@ -11,19 +11,14 @@ import {
   CircularProgress,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import { cartApi } from '../services/api';
+import { cartApi, productApi } from '../services/api';
 import { CartItem, Product } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ProductList = () => {
-  const [products] = useState<Product[]>(
-    [
-      { id: '1', name: 'Laptop', price: 999.99, description: 'High-end laptop', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D' },
-      { id: '2', name: 'Phone', price: 599.99, description: 'Smartphone', image: 'https://www.lovemerchandise.co.uk/images/module_images/shop/love_merchandise_eco_sustainable.jpg' },
-    ]
-  );
+  const [products, setProducts] = useState<Product[]>([]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -39,8 +34,24 @@ const ProductList = () => {
    * If there is an error fetching the cart items, a toast error message is displayed.
    */
   useEffect(() => {
+    fetchProducts();
     fetchCartDetails(); // Call the async function
-  }, []) // Add user.id as a dependency
+  }) // Add user.id as a dependency
+
+  async function fetchProducts() {
+    setLoading(true);
+    try {
+      const response = await productApi.getAll(); 
+      console.log(response)
+      if(response.status === 200){
+        setProducts(response.data);
+      }
+    } catch {
+      toast.error('Failed to fetch products. Please try again.'); // Handle error
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const fetchCartDetails = async () => { // Define an async function
     try {
@@ -111,7 +122,7 @@ const ProductList = () => {
                 <Typography gutterBottom variant="h5" component="h2">
                   {product.name}
                 </Typography>
-                <Typography>${product.price}</Typography>
+                <Typography>Rs. {product.price}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {product.description}
                 </Typography>
